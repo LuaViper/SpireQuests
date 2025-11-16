@@ -115,7 +115,8 @@ public class QuestManager {
         questList.add(quest);
         questList.sort(null);
         quest.onStart();
-        QuestRunHistoryPatch.questPickupPerFloorLog.get(AbstractDungeon.player).get(AbstractDungeon.floorNum).add(quest.id);
+        List<List<String>> questPickupPerFloor = QuestRunHistoryPatch.questPickupPerFloorLog.get(AbstractDungeon.player);
+        questPickupPerFloor.get(questPickupPerFloor.size() - 1).add(quest.id);
     }
 
     public static void completeQuest(AbstractQuest quest) {
@@ -136,7 +137,8 @@ public class QuestManager {
 
         quests().remove(quest);
         quest.obtainRewards();
-        QuestRunHistoryPatch.questCompletionPerFloorLog.get(AbstractDungeon.player).get(AbstractDungeon.floorNum).add(quest.id);
+        List<List<String>> questCompletionPerFloor = QuestRunHistoryPatch.questCompletionPerFloorLog.get(AbstractDungeon.player);
+        questCompletionPerFloor.get(questCompletionPerFloor.size() - 1).add(quest.id);
     }
 
     public static void failQuest(AbstractQuest quest) {
