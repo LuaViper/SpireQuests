@@ -5,7 +5,9 @@ import basemod.abstracts.CustomSavable;
 import com.evacipated.cardcrawl.modthespire.lib.SpireField;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.random.Random;
 import spireQuests.util.Wiz;
 
 import java.util.ArrayList;
@@ -39,9 +41,10 @@ public class QuestGenerator {
 
     public static ArrayList<AbstractQuest> generateRandomQuests(boolean fromNeow) {
         ArrayList<AbstractQuest> generatedQuests = new ArrayList<>();
+        Random rng = new Random(Settings.seed + (9419L * (AbstractDungeon.floorNum + 1)));
 
-        for (AbstractQuest.QuestDifficulty difficulty : rollDifficulties(fromNeow)) {
-            AbstractQuest quest = rollQuestForDifficulty(difficulty, seenQuests.get(AbstractDungeon.player));
+        for (AbstractQuest.QuestDifficulty difficulty : rollDifficulties(fromNeow, rng)) {
+            AbstractQuest quest = rollQuestForDifficulty(difficulty, seenQuests.get(AbstractDungeon.player), rng);
             if (quest != null) {
                 quest.setCost();
                 generatedQuests.add(quest);
@@ -52,7 +55,7 @@ public class QuestGenerator {
         return generatedQuests;
     }
 
-    private static AbstractQuest.QuestDifficulty[] rollDifficulties(boolean fromNeow) {
+    private static AbstractQuest.QuestDifficulty[] rollDifficulties(boolean fromNeow, Random rng) {
         AbstractQuest.QuestDifficulty[] difficulties = new AbstractQuest.QuestDifficulty[] {
                 AbstractQuest.QuestDifficulty.EASY,
                 AbstractQuest.QuestDifficulty.NORMAL,
@@ -60,7 +63,7 @@ public class QuestGenerator {
         };
 
         if (fromNeow) {
-            boolean challenge = AbstractDungeon.miscRng.randomBoolean();
+            boolean challenge = rng.randomBoolean();
             if (challenge) {
                 difficulties[2] = AbstractQuest.QuestDifficulty.CHALLENGE;
             }
@@ -69,7 +72,7 @@ public class QuestGenerator {
         return difficulties;
     }
 
-    private static AbstractQuest rollQuestForDifficulty(AbstractQuest.QuestDifficulty difficulty, Set<String> seenQuestIds) {
+    private static AbstractQuest rollQuestForDifficulty(AbstractQuest.QuestDifficulty difficulty, Set<String> seenQuestIds, Random rng) {
         ArrayList<AbstractQuest> pool;
         if (difficulty != null) {
             pool = getQuestsByDifficulty(difficulty);
@@ -86,12 +89,12 @@ public class QuestGenerator {
                 .collect(Collectors.toCollection(ArrayList::new));
 
         if (!possible.isEmpty()) {
-            AbstractQuest rolled = Wiz.getRandomItem(possible, AbstractDungeon.miscRng);
+            AbstractQuest rolled = Wiz.getRandomItem(possible, rng);
             return rolled.makeCopy();
         }
 
         if (difficulty != null) {
-            return rollQuestForDifficulty(null, seenQuestIds);
+            return rollQuestForDifficulty(null, seenQuestIds, rng);
         }
         return null;
     }
