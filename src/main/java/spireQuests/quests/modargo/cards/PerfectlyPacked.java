@@ -4,6 +4,7 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import spireQuests.abstracts.AbstractSQCard;
+import spireQuests.quests.modargo.PackFanaticQuest;
 import spireQuests.quests.modargo.actions.PerfectlyPackedAction;
 
 import static spireQuests.Anniv8Mod.makeID;
@@ -24,5 +25,20 @@ public class PerfectlyPacked extends AbstractSQCard {
     @Override
     public void upp() {
         this.isInnate = true;
+    }
+
+    @Override
+    public boolean canUse(AbstractPlayer p, AbstractMonster m) {
+        if (!super.canUse(p, m)) {
+            return false;
+        }
+        long packCardCount = AbstractDungeon.player.drawPile.group.stream()
+                .filter(c -> PackFanaticQuest.cardParentMap.containsKey(c.cardID))
+                .count();
+        if (packCardCount == 0) {
+            this.cantUseMessage = cardStrings.EXTENDED_DESCRIPTION[0];
+            return false;
+        }
+        return true;
     }
 }
