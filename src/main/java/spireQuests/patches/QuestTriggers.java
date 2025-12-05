@@ -23,6 +23,7 @@ import com.megacrit.cardcrawl.ui.panels.PotionPopUp;
 import com.megacrit.cardcrawl.ui.panels.TopPanel;
 import javassist.CtBehavior;
 import spireQuests.quests.Trigger;
+import spireQuests.quests.ramchops.patch.ShopMoneyTracker;
 
 public class QuestTriggers {
     public static final Trigger<Void> DECK_CHANGE = new Trigger<>();
