@@ -125,7 +125,7 @@ public class EmbraceTheCurseQuest extends AbstractQuest {
     }
 
     private static AbstractCard getCurse(AbstractCard.CardRarity rarity) {
-        // We only generate the normal base game curses because have a really nice distribution of effects for the
+        // We only generate the normal base game curses because they have a really nice distribution of effects for the
         // purposes of this quest, and we don't want to mix in potentially weird modded curses.
         List<AbstractCard> mostlyHarmlessCurses = Arrays.asList(new Clumsy(), new Injury(), new Parasite(), new Writhe());
         List<AbstractCard> harmfulCurses = Arrays.asList(new Decay(), new Doubt(), new Normality(), new Pain(), new Regret(), new Shame());
