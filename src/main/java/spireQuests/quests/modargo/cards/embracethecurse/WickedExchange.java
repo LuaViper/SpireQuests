@@ -26,9 +26,11 @@ public class WickedExchange extends EmbraceTheCurseCard {
             @Override
             public void update() {
                 List<AbstractCard> curses = AbstractDungeon.player.hand.group.stream().filter(c -> c.color == CardColor.CURSE).collect(Collectors.toList());
-                this.addToTop(new DrawCardAction(curses.size()));
-                for (AbstractCard c : curses) {
-                    this.addToTop(new DiscardSpecificCardAction(c));
+                if (!curses.isEmpty()) {
+                    this.addToTop(new DrawCardAction(curses.size()));
+                    for (AbstractCard c : curses) {
+                        this.addToTop(new DiscardSpecificCardAction(c));
+                    }
                 }
                 this.isDone = true;
             }
