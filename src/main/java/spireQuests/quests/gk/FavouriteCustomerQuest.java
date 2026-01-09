@@ -19,6 +19,12 @@ public class FavouriteCustomerQuest extends AbstractQuest {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        AbstractDungeon.commonRelicPool.remove(SmilingMask.ID);
+    }
+
+    @Override
     public boolean canSpawn() {
         return !Wiz.p().hasRelic(SmilingMask.ID) && (Settings.isEndless || AbstractDungeon.actNum < 40);
     }
