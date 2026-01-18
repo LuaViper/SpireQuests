@@ -108,6 +108,11 @@ public abstract class QuestReward {
         }
 
         @Override
+        public void addTooltip(List<PowerTip> tips) {
+            tips.add(new PowerTip(StatRewardBox.getGoldRewardTitleText(),rewardText));
+        }
+
+        @Override
         public void obtainRewardItem() {
             AbstractDungeon.combatRewardScreen.rewards.add(0, new RewardItem(amount));
             AbstractDungeon.combatRewardScreen.positionRewards();
@@ -195,6 +200,11 @@ public abstract class QuestReward {
         @Override
         public TextureRegion icon() {
             return ImageMaster.COPPER_COIN_1;
+        }
+
+        @Override
+        public void addTooltip(List<PowerTip> tips) {
+            tips.add(new PowerTip(StatRewardBox.getRandomRelicRewardTitleText(),rewardText));
         }
 
         @Override
@@ -343,6 +353,11 @@ public abstract class QuestReward {
         @Override
         public TextureRegion icon() {
             return img;
+        }
+
+        @Override
+        public void addTooltip(List<PowerTip> tips) {
+            tips.add(new PowerTip(StatRewardBox.getMaxHPRewardTitleText(),rewardText));
         }
 
         @Override
