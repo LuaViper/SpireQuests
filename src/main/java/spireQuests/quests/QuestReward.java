@@ -442,7 +442,7 @@ public abstract class QuestReward {
         hb.render(sb);
     }
 
-    public void drawTooltipIfHovered(SpriteBatch sb){
+    public void drawTooltipIfHovered(){
         if(!hb.hovered)return;
         ArrayList<PowerTip> previewTooltips = new ArrayList<>();
         addTooltip(previewTooltips);

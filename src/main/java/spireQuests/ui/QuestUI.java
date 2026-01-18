@@ -74,8 +74,8 @@ public class QuestUI {
 
             Hitbox hb = questHitboxes.get(i);
             List<QuestReward> rewards = quest.getQuestRewardsForActiveQuestList();
-            for (int j = 0; j < rewards.size(); ++j) {
-                rewards.get(j).updateHitbox();
+            for (QuestReward reward : rewards) {
+                reward.updateHitbox();
             }
 
             int trackerCount = 0;
@@ -195,7 +195,7 @@ public class QuestUI {
                         sb.draw(rewards.get(j).icon(), xPos - (32 * (rewards.size() - j)), yPos - (SMALL_SPACING * 1.1f), 32, 32);
                         rewards.get(j).repositionHitbox(xPos - (32 * (rewards.size() - j)), yPos - (SMALL_SPACING * 1.1f), 32, 32);
                         rewards.get(j).renderHitbox(sb);
-                        rewards.get(j).drawTooltipIfHovered(sb);
+                        rewards.get(j).drawTooltipIfHovered();
                     }
                 }
 
