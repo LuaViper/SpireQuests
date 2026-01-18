@@ -65,6 +65,7 @@ public abstract class AbstractQuest implements Comparable<AbstractQuest> {
 
     public boolean useDefaultReward;
     public List<QuestReward> questRewards;
+    private QuestReward.CustomRewardIconPlaceholder customRewardIconPlaceholder;
     public boolean rewardScreenOnly = false;
 
     public boolean isAbandoning = false;
@@ -1032,6 +1033,18 @@ public abstract class AbstractQuest implements Comparable<AbstractQuest> {
     public ArrayList<AbstractRelic> questboundRelics;
     // Setting removeQBDup to true will make it remove from pools when obtained.
     // Setting returnQPRelics to true adds them to the pool again once the Quest is complete. (Ignored if the first boolean is set to false)
+
+    //This function is used by QuestUI to add the Custom Reward icon to the list of quest rewards.
+    // Anywhere else you need the list of rewards, just use quest.questRewards.
+    public List<QuestReward> getQuestRewardsForActiveQuestList(){
+        //clone rewards list. if quest has a custom reward, add it to the list
+        List<QuestReward> rewards = new ArrayList<>(this.questRewards);
+        if(questStrings.REWARD!=null && !questStrings.REWARD.isEmpty()) {
+            if(customRewardIconPlaceholder==null) customRewardIconPlaceholder = new QuestReward.CustomRewardIconPlaceholder(questStrings.REWARD);
+            rewards.add(customRewardIconPlaceholder);
+        }
+        return rewards;
+    }
 
     public boolean removeQuestboundDuplicate = true;
     public boolean returnQuestboundRelics = true;
