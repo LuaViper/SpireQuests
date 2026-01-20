@@ -2,6 +2,7 @@ package spireQuests.patches;
 
 import basemod.helpers.CardModifierManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.evacipated.cardcrawl.modthespire.Loader;
 import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -121,28 +122,14 @@ public class QuestboundModPatch {
         }
     }
 
+    // Incompatibility due to happening at the same time as hubris' patch for isInnateOnce
     @SpirePatch2(clz = CardGroup.class, method = "initializeDeck")
     public static class initializeQuestboundCards {
         @SpireInsertPatch(locator = Locator.class, localvars = {"copy"})
         public static void initialize(CardGroup copy) {
-            getQuestbound().forEach(q -> {
-                List<AbstractCard> overrides = q.overrideQuestboundCards();
-                if (overrides != null) {
-                    overrides = overrides.stream().map(AbstractCard::makeSameInstanceOf).collect(Collectors.toList());
-                    overrides.forEach(c -> {
-                        CardModifierManager.addModifier(c, new QuestboundMod(q));
-                        copy.group.add(c);
-                    });
-                    QuestboundCardsToShowField.cards.get(AbstractDungeon.player).addAll(overrides);
-                }
-                else {
-                    List<AbstractCard> questboundCards = q.questboundCards.stream().map(AbstractCard::makeSameInstanceOf).collect(Collectors.toList());
-                    copy.group.addAll(questboundCards);
-                    if (!questboundEnabled()) {
-                        QuestboundCardsToShowField.cards.get(AbstractDungeon.player).addAll(questboundCards);
-                    }
-                }
-            });
+            if(!Loader.isModLoaded("hubris")) {
+                initQuestboundCards(copy);
+            }
         }
 
         private static class Locator extends SpireInsertLocator {
@@ -151,6 +138,35 @@ public class QuestboundModPatch {
                 return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
             }
         }
+    }
+
+    @SpirePatch2(cls = "com.evacipated.cardcrawl.mod.hubris.patches.cards.AbstractCard.InnateOncePatch$PlayingCardMapPatch", method = "Insert", requiredModId = "hubris")
+    public static class InitializeQuestBoundCardsForHubris {
+        @SpirePostfixPatch
+        public static void patch(CardGroup copy) {
+            initQuestboundCards(copy);
+        }
+    }
+
+    public static void initQuestboundCards(CardGroup copy) {
+        getQuestbound().forEach(q -> {
+            List<AbstractCard> overrides = q.overrideQuestboundCards();
+            if (overrides != null) {
+                overrides = overrides.stream().map(AbstractCard::makeSameInstanceOf).collect(Collectors.toList());
+                overrides.forEach(c -> {
+                    CardModifierManager.addModifier(c, new QuestboundMod(q));
+                    copy.group.add(c);
+                });
+                QuestboundCardsToShowField.cards.get(AbstractDungeon.player).addAll(overrides);
+            }
+            else {
+                List<AbstractCard> questboundCards = q.questboundCards.stream().map(AbstractCard::makeSameInstanceOf).collect(Collectors.toList());
+                copy.group.addAll(questboundCards);
+                if (!questboundEnabled()) {
+                    QuestboundCardsToShowField.cards.get(AbstractDungeon.player).addAll(questboundCards);
+                }
+            }
+        });
     }
 
     @SpirePatch2(clz = TopPanel.class, method = "renderTopRightIcons")
