@@ -204,13 +204,24 @@ public class BoatRepairQuest extends AbstractQuest implements MarkNodeQuest, Cus
             // In act 3, we give the player a chance to pick up all three relics on a connected path
             MapRoomNode room1, room2, room3;
             room1 = room2 = room3 = null;
+            int i = 0;
             while (room2 == null || room3 == null) {
+                // We try to find a connected set of rooms by picking an arbitrary initial room, then looking for valid
+                // rooms connected to it. If we can't find valid rooms, we pick a different first room and try again.
+                room1 = null;
                 while(room1 == null || room1.getRoom() == null || room1.getRoom() instanceof MonsterRoom || (room1.getRoom() instanceof RestRoom && (!hasShovel) || room1.equals(markedX))) {
                     int y = rng.random(AbstractDungeon.map.size() - 1);
                     room1 = AbstractDungeon.map.get(y).get(rng.random(AbstractDungeon.map.get(y).size() - 1));
                 }
                 room2 = findNewRoom(room1, room1, rng);
-                room3 = findNewRoom(room1, room2, rng);
+                if (room2 != null) {
+                    room3 = findNewRoom(room1, room2, rng);
+                }
+                i++;
+                if (i > 50) {
+                    Anniv8Mod.logger.warn("Boat Repair: couldn't find valid placement for relics after 50 tries, giving up.");
+                    return;
+                }
             }
             if(needAnchor) {
                 ShowMarkedNodesOnMapPatch.ImageField.MarkNode(room1, id, textures.get(0));
