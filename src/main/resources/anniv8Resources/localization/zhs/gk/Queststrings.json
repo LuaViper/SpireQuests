@@ -8,7 +8,7 @@
     ]
   },
   "${ModID}:AbstinenceQuest": {
-    "TITLE": "戒除",
+    "TITLE": "戒律",
     "DESCRIPTION": "在接下来的 #b4 场战斗中不使用药水。",
     "AUTHOR": "Gk",
     "TRACKER_TEXT": [
@@ -23,7 +23,7 @@
       "已打出次数"
     ],
     "EXTRA_TEXT": [
-      "在一场战斗中打出指定的初始卡牌 #b3 次。"
+      "在一场战斗中打出指定的初始牌 #b3 次。"
     ]
   },
   "${ModID}:BountyICQuest": {
@@ -36,7 +36,7 @@
     ]
   },
   "${ModID}:FavouriteCustomerQuest": {
-    "TITLE": "贵宾客户",
+    "TITLE": "贵宾",
     "DESCRIPTION": "在商店中消费 #b10 次。",
     "AUTHOR": "Gk",
     "TRACKER_TEXT": [

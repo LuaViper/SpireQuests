@@ -8,7 +8,7 @@
   "${ModID}:BalatroEditions": {
     "TEXT": [
       "刻印",
-      "#g箔片 - 首次打出此牌时获得 #b50 #y金币 。 NL #g全息 - 打出此牌后，获得 #b10 点临时 #y力量 。 NL #g多色 - #b50% 几率额外打出一次。 NL #g负片 - 抽到此牌时，抽一张牌。"
+      "#g箔片 - 首次打出这张牌时获得 #b50 #y金币 。 NL #g全息 - 打出这张牌后，获得 #b10 点临时 #y力量 。 NL #g多色 - #b50% 几率额外打出一次。 NL #g负片 - 抽到这张牌时，抽一张牌。"
     ]
   },
   "${ModID}:BalatroQuestCombatReward": {
@@ -28,7 +28,7 @@
       "Arm": "[${ModID}:ArmIcon] 臂膀",
       "Arm_Description": "永久将你打出的第一张已升级卡牌替换为普通的未升级版本。",
       "Club": "[${ModID}:ClubIcon] 俱乐部",
-      "Club_Description": "所有初始卡牌获得减益。",
+      "Club_Description": "所有初始牌获得减益。",
       "Eye": "[${ModID}:EyeIcon] 眼睛",
       "Eye_Description": "当你连续打出两张相同类型的卡牌时，失去 #b3 点生命。",
       "Fish": "[${ModID}:FishIcon] 鱼",

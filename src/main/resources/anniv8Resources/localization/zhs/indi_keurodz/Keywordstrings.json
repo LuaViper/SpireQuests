@@ -4,7 +4,7 @@
     "NAMES": [
       "减益"
     ],
-    "DESCRIPTION": "在你打出此牌后，随机获得 #b1 层 #y虚弱 、#y脆弱 或 #y易伤 。",
+    "DESCRIPTION": "当你打出这张牌时，随机获得 #b1 层 #y虚弱 、 #y脆弱 或 #y易伤 。",
     "COLOR": "ff6563"
   },
   {
@@ -13,7 +13,7 @@
     "NAMES": [
       "箔片"
     ],
-    "DESCRIPTION": "每场战斗中首次打出此牌时，获得 #b50 金币。"
+    "DESCRIPTION": "每场战斗中首次打出这张牌时，获得 #b50 金币。"
   },
   {
     "ID": "${ModID}:Holo",
@@ -21,7 +21,7 @@
     "NAMES": [
       "全息"
     ],
-    "DESCRIPTION": "在你打出此牌后，获得 #b10 点临时 #y力量 。"
+    "DESCRIPTION": "当你打出这张牌时，获得 #b10 点临时 #y力量 。"
   },
   {
     "ID": "${ModID}:Polychrome",
@@ -37,7 +37,7 @@
     "NAMES": [
       "负片"
     ],
-    "DESCRIPTION": "当你抽到此牌时，抽一张牌。"
+    "DESCRIPTION": "当你抽到这张牌时，抽一张牌。"
   },
   {
     "ID": "${ModID}:Perishable",

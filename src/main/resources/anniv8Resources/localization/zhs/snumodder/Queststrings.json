@@ -5,13 +5,13 @@
     "AUTHOR": "snumodder",
     "REWARD": "升级所有初始牌。",
     "TRACKER_TEXT": [
-      "偶数/X耗能牌",
-      "无奇数耗能牌"
+      "牌组中的偶数/X耗能牌",
+      "牌组中的奇数耗能牌"
     ]
   },
   "${ModID}:GaronaHalforcenQuest": {
     "TITLE": "迦罗娜·哈弗欧森",
-    "DESCRIPTION": "获得 #y任务绑定 的 #y莱恩国王 。 NL 使其在 #b3 场战斗中不被消耗。",
+    "DESCRIPTION": "获得一张 #y任务绑定 的 #y莱恩国王 。 NL 使其在 #b3 场战斗中不被 #y消耗 。",
     "AUTHOR": "snumodder",
     "TRACKER_TEXT": [
       "莱恩国王成功存活"

@@ -5,6 +5,6 @@
   },
   "${ModID}:StarOfExtinction": {
     "NAME": "灭绝之星",
-    "DESCRIPTION": "消耗一张牌并将其从牌组中永久移除。 NL 对所有敌人造成 !D! 点伤害。 NL 消耗。"
+    "DESCRIPTION": "消耗一张牌并将其从牌组中移除。 NL 对所有敌人造成 !D! 点伤害。 NL 消耗。"
   }
 }

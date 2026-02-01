@@ -19,11 +19,11 @@
     ]
   },
   "${ModID}:EvilSentryQuest": {
-    "TITLE": "邪恶哨兵",
-    "DESCRIPTION": "你本幕的下一个精英将是三个哨兵。除了它们的正常行动外，它们还能执行一个特殊行动（造成 #b5 点伤害并给予 #b1 层抽牌减少）。击败它们。",
+    "TITLE": "邪恶哨卫",
+    "DESCRIPTION": "你本幕的下一个精英将是三个哨卫。除了它们的正常行动外，它们还能执行一个特殊行动（造成 #b5 点伤害并给予 #b1 层抽牌减少）。击败它们。",
     "AUTHOR": "RamChops Games",
     "TRACKER_TEXT": [
-      "击败邪恶哨兵"
+      "击败邪恶哨卫"
     ]
   },
   "${ModID}:WindowShoppingQuest": {
@@ -57,7 +57,7 @@
     ]
   },
   "${ModID}:BloomerQuest": {
-    "TITLE": "好吧，花开者",
+    "TITLE": "好吧，绽放者",
     "DESCRIPTION": "拾取时，获得一个 #y任务绑定 的 #y绽放印记 。携带它攀登 #b10 层。",
     "AUTHOR": "RamChops Games",
     "TRACKER_TEXT": [
@@ -66,7 +66,7 @@
   },
   "${ModID}:HashtagBlessedQuest": {
     "TITLE": "#祝福",
-    "DESCRIPTION": "在每场战斗开始时，一个随机的非爪牙敌人将被赋予一个随机增益。击败第二幕首领。",
+    "DESCRIPTION": "在每场战斗开始时，一个随机的非爪牙敌人将被赋予一个随机的增益。直到你击败第二幕首领。",
     "AUTHOR": "RamChops Games",
     "TRACKER_TEXT": [
       "击败第二幕首领"

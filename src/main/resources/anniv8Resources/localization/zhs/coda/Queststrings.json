@@ -32,12 +32,12 @@
   },
   "${ModID}:BuildAComboQuest": {
     "TITLE": "组合构筑",
-    "DESCRIPTION": "在一个回合内打出一张消耗为 #b1 、#b2 和 #b3 的卡牌。",
+    "DESCRIPTION": "在一个回合内打出一张耗能为 #b1 、#b2 和 #b3 的卡牌。",
     "AUTHOR": "coda",
     "TRACKER_TEXT": [
-      "已打出1消耗卡牌",
-      "已打出2消耗卡牌",
-      "已打出3消耗卡牌"
+      "已打出耗能1卡牌",
+      "已打出耗能2卡牌",
+      "已打出耗能3卡牌"
     ]
   },
   "${ModID}:KeyCollector": {
