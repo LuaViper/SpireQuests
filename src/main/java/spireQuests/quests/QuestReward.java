@@ -32,6 +32,7 @@ import java.util.function.Function;
 
 import static spireQuests.Anniv8Mod.makeID;
 import static spireQuests.Anniv8Mod.makeUIPath;
+import static spireQuests.util.LanguageUtils.formatLanguage;
 
 public abstract class QuestReward {
     private static final String[] TEXT = CardCrawlGame.languagePack.getUIString(makeID("QuestReward")).TEXT;
@@ -135,7 +136,7 @@ public abstract class QuestReward {
         private final TextureRegion img;
 
         public RelicReward(AbstractRelic r) {
-            super(String.format(TEXT[1], FontHelper.colorString(r.name, "y")));
+            super(formatLanguage(TEXT[1], FontHelper.colorString(r.name, "y")));
             this.relic = r;
             this.img = new TextureRegion(this.relic.img, 28, 28, 72, 72);
         }
@@ -241,7 +242,7 @@ public abstract class QuestReward {
                         break;
                 }
             }
-            return String.format(TEXT[1], relicTier);
+            return formatLanguage(TEXT[1], relicTier);
         }
     }
 
@@ -250,7 +251,7 @@ public abstract class QuestReward {
         private final TextureRegion img;
 
         public PotionReward(AbstractPotion p) {
-            super(String.format(TEXT[1], FontHelper.colorString(p.name, "y")));
+            super(formatLanguage(TEXT[1], FontHelper.colorString(p.name, "y")));
             this.potion = p;
             this.img = TexLoader.getTextureAsAtlasRegion(makeUIPath("potion_reward.png"));
         }
@@ -295,7 +296,7 @@ public abstract class QuestReward {
         private final AbstractCard card;
 
         public CardReward(AbstractCard card) {
-            super(String.format(TEXT[1], FontHelper.colorString(card.name, "y")));
+            super(formatLanguage(TEXT[1], FontHelper.colorString(card.name, "y")));
             this.card = card;
         }
 
@@ -306,7 +307,7 @@ public abstract class QuestReward {
 
         @Override
         public void addTooltip(List<PowerTip> tips) {
-            tips.add(new CardPowerTip(card));
+            tips.add(new CardPowerTip(card.makeCopy()));
         }
 
         @Override
@@ -466,7 +467,7 @@ public abstract class QuestReward {
     }
 
     public static Vector2f getMousePositionForTip(){
-        if ((float) InputHelper.mX < 1400.0F * Settings.scale) {
+        if ((float) InputHelper.mX < 1400.0F * Settings.xScale) {
             return new Vector2f((float) InputHelper.mX + 60.0F * Settings.xScale, (float) InputHelper.mY - 50.0F * Settings.yScale);
         } else {
             return new Vector2f((float) InputHelper.mX - 350.0F * Settings.xScale, (float) InputHelper.mY - 50.0F * Settings.yScale);

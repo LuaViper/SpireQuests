@@ -51,6 +51,7 @@ public class QuestTriggers {
     public static final Trigger<Integer> DAMAGE_TAKEN = new Trigger<>();
     public static final Trigger<Void> BEFORE_COMBAT_START = new Trigger<>();
     public static final Trigger<Void> TURN_START = new Trigger<>();
+    public static final Trigger<Void> BEFORE_TURN_END = new Trigger<>(); //After the player has clicked end turn, but before end of turn effects like orbs
     public static final Trigger<Void> TURN_END = new Trigger<>();
     public static final Trigger<Void> VICTORY = new Trigger<>(); //Excludes Smoke Bomb and other ways of escaping
     public static final Trigger<Void> COMBAT_END = new Trigger<>();
@@ -149,27 +150,12 @@ public class QuestTriggers {
         }
     }
 
-    @SpirePatch(
-            clz = AbstractDungeon.class,
-            method = "nextRoomTransition",
-            paramtypez = {SaveFile.class}
-    )
-    public static class OnEnterRoom {
-        @SpireInsertPatch(
-                locator = Locator.class
-        )
-        public static void onEnterRoom(AbstractDungeon __instance, SaveFile file) {
-            if (!disabled() && AbstractDungeon.nextRoom != null) {
-                ENTER_ROOM.trigger(AbstractDungeon.nextRoom);
-            }
-        }
-
-        private static class Locator extends SpireInsertLocator {
-            @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.FieldAccessMatcher(AbstractPlayer.class, "relics");
-                return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
-            }
+    // This is called from the patch for autocompleting quests, because we want to guarantee that the trigger happens
+    // after the autocomplete check (both want to patch the same location, which would mean that we can't control which
+    // one goes first).
+    public static void onEnterRoom() {
+        if (!disabled() && AbstractDungeon.nextRoom != null) {
+            ENTER_ROOM.trigger(AbstractDungeon.nextRoom);
         }
     }
 
@@ -222,6 +208,16 @@ public class QuestTriggers {
             if (disabled()) return;
 
             TURN_START.trigger();
+        }
+    }
+
+    @SpirePatch2(clz = GameActionManager.class, method = "callEndOfTurnActions")
+    public static class BeforeTurnEnd {
+        @SpirePrefixPatch
+        public static void beforeTurnEndPatch() {
+            if (disabled()) return;
+
+            BEFORE_TURN_END.trigger();
         }
     }
 
@@ -621,7 +617,7 @@ public class QuestTriggers {
         public static void onDamage(AbstractPlayer __instance, DamageInfo info, int damageAmount) {
             if (disabled()) return;
 
-            UNBLOCKED_ATTACK_DAMAGE_TAKEN.trigger(damageAmount);
+            if(info.owner != null && info.type != DamageInfo.DamageType.THORNS && info.type != DamageInfo.DamageType.HP_LOSS) UNBLOCKED_ATTACK_DAMAGE_TAKEN.trigger(damageAmount);
         }
 
         private static class Locator extends SpireInsertLocator {

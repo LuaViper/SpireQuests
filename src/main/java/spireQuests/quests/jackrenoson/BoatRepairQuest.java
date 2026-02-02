@@ -2,7 +2,6 @@ package spireQuests.quests.jackrenoson;
 
 import basemod.abstracts.CustomSavable;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
@@ -19,15 +18,12 @@ import spireQuests.quests.MarkNodeQuest;
 import spireQuests.quests.QuestManager;
 import spireQuests.quests.QuestReward;
 import spireQuests.quests.jackrenoson.relics.Sail;
-import spireQuests.quests.modargo.MulticlassQuest;
-import spireQuests.ui.QuestBoardScreen;
 import spireQuests.util.NodeUtil;
 import spireQuests.util.TexLoader;
+import spireQuests.util.Wiz;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
 
 import static spireQuests.Anniv8Mod.makeID;
 
@@ -51,12 +47,15 @@ public class BoatRepairQuest extends AbstractQuest implements MarkNodeQuest, Cus
 
         new TriggerTracker<>(QuestTriggers.OBTAIN_RELIC, 1)
                 .triggerCondition(r -> r.relicId.equals(Anchor.ID))
+                .setFailureTrigger(QuestTriggers.ACT_CHANGE, actNum -> actNum > 3)
                 .add(this);
         new TriggerTracker<>(QuestTriggers.OBTAIN_RELIC, 1)
                 .triggerCondition(r -> r.relicId.equals(HornCleat.ID))
+                .setFailureTrigger(QuestTriggers.ACT_CHANGE, actNum -> actNum > 3)
                 .add(this);
         new TriggerTracker<>(QuestTriggers.OBTAIN_RELIC, 1)
                 .triggerCondition(r -> r.relicId.equals(CaptainsWheel.ID))
+                .setFailureTrigger(QuestTriggers.ACT_CHANGE, actNum -> actNum > 3)
                 .add(this);
 
         addReward(new QuestReward.RelicReward(new Sail()));
@@ -88,7 +87,7 @@ public class BoatRepairQuest extends AbstractQuest implements MarkNodeQuest, Cus
                 if(r.relicId.equals(Anchor.ID) || r.relicId.equals(HornCleat.ID) || r.relicId.equals(CaptainsWheel.ID)) return false;
             }
         }
-        return !AbstractDungeon.player.hasRelic(Anchor.ID) || AbstractDungeon.player.hasRelic(HornCleat.ID) || AbstractDungeon.player.hasRelic(CaptainsWheel.ID);
+        return !Wiz.p().hasRelic(Anchor.ID) && !Wiz.p().hasRelic(HornCleat.ID) && !Wiz.p().hasRelic(CaptainsWheel.ID);
     }
 
     @Override
@@ -177,7 +176,7 @@ public class BoatRepairQuest extends AbstractQuest implements MarkNodeQuest, Cus
                     if (node != null && node.getRoom() != null && node.getRoom().getClass() != room1.getRoom().getClass() && node.getRoom().getClass() != room2.getRoom().getClass() && !(node.getRoom() instanceof MonsterRoom || (node.getRoom() instanceof RestRoom && !(hasShovel || curr.equals(markedX))))) {
                         middleFromBot.add(node);
                     }
-                    if (node.y < Math.min(room1.y, room2.y))
+                    if (node.y < Math.max(room1.y, room2.y))
                         middleBotCheckList.add(node);
                 }
             }
@@ -187,33 +186,54 @@ public class BoatRepairQuest extends AbstractQuest implements MarkNodeQuest, Cus
                 validRooms.add(node);
             }
         }
+        if(validRooms.isEmpty()) return null;
         return validRooms.get(rng.random(validRooms.size()-1));
     }
 
     @Override
     public void markNodes(ArrayList<ArrayList<MapRoomNode>> map, Random rng) {
+        if (AbstractDungeon.actNum > 3) {
+            // In act 4, the map layout makes it difficult to have this logic work in a stable way, so we don't try (and fail the quest if you get to act 4 with it incomplete)
+            return;
+        }
         if(curAct != AbstractDungeon.actNum){
             updateSavables();
             markedX = null;
         }
-        if (AbstractDungeon.actNum >= 3) {
-            MapRoomNode room1 = null;
-            while (room1 == null || room1.getRoom() == null || room1.getRoom() instanceof MonsterRoom || (room1.getRoom() instanceof RestRoom && (!hasShovel) || room1.equals(markedX))) {
-                int y = rng.random(AbstractDungeon.map.size() - 1);
-                room1 = AbstractDungeon.map.get(y).get(rng.random(AbstractDungeon.map.get(y).size() - 1));
+        if (AbstractDungeon.actNum == 3) {
+            // In act 3, we give the player a chance to pick up all three relics on a connected path
+            MapRoomNode room1, room2, room3;
+            room1 = room2 = room3 = null;
+            int i = 0;
+            while (room2 == null || room3 == null) {
+                // We try to find a connected set of rooms by picking an arbitrary initial room, then looking for valid
+                // rooms connected to it. If we can't find valid rooms, we pick a different first room and try again.
+                room1 = null;
+                while(room1 == null || room1.getRoom() == null || room1.getRoom() instanceof MonsterRoom || (room1.getRoom() instanceof RestRoom && (!hasShovel) || room1.equals(markedX))) {
+                    int y = rng.random(AbstractDungeon.map.size() - 1);
+                    room1 = AbstractDungeon.map.get(y).get(rng.random(AbstractDungeon.map.get(y).size() - 1));
+                }
+                room2 = findNewRoom(room1, room1, rng);
+                if (room2 != null) {
+                    room3 = findNewRoom(room1, room2, rng);
+                }
+                i++;
+                if (i > 50) {
+                    Anniv8Mod.logger.warn("Boat Repair: couldn't find valid placement for relics after 50 tries, giving up.");
+                    return;
+                }
             }
             if(needAnchor) {
                 ShowMarkedNodesOnMapPatch.ImageField.MarkNode(room1, id, textures.get(0));
             }
-            MapRoomNode room2 = findNewRoom(room1, room1, rng);
             if(needHornCleat) {
                 ShowMarkedNodesOnMapPatch.ImageField.MarkNode(room2, id, textures.get(1));
             }
-            MapRoomNode room3 = findNewRoom(room1, room2, rng);
             if(needCaptainsWheel) {
                 ShowMarkedNodesOnMapPatch.ImageField.MarkNode(room3, id, textures.get(2));
             }
         } else {
+            // In act 1 or 2, we distribute the relics across the map, so the player may not have the opportunity to get all of them along one path
             ArrayList<MapRoomNode> toBeChecked = new ArrayList<>();
             ArrayList<MapRoomNode> restRooms = new ArrayList<>();
             ArrayList<MapRoomNode> shopRooms = new ArrayList<>();
